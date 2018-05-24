@@ -1,0 +1,59 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div id='example-1'>
+    <input type="text" v-model='message'>
+    <p>{{message}}</p>
+
+
+    <input type="checkbox" value="Yurii" v-model='names'>
+    <input type="checkbox" value="Vasia" v-model='names'>
+    <input type="checkbox" value="Petia" v-model='names'>
+    <li v-for="(item, index) in names">
+        {{index}} - {{item}}
+    </li>
+    <select v-model="selected">
+            <option disabled value="">Please select one</option>
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+          </select>
+    <span>Selected: {{ selected }}</span>
+
+
+
+<select v-model="selected">
+    <option v-for="option in options" v-bind:value="option.valueParam">
+        {{ option.text }}
+    </option>
+</select>
+<span>Selected: {{ selected }}</span>
+
+<select v-model='selected'>
+    <option v-for='item of options' v-bind:value='item.valueParam'>
+        {{item.text}}
+    </option>
+</select>
+<select v-model="selected">
+        <!-- inline object literal -->
+        <option v-bind:value="{ number: 123 }">123</option>
+      </select>
+
+</div>
+<script>
+    let C1 = new Vue({
+        el: '#example-1',
+        data: {
+            message: 'ss',
+            names: [],
+            
+            selected: 'A',
+            options: [
+              { text: 'One', valueParam: 'A' },
+              { text: 'Two', valueParam: 'B' },
+              { text: 'Three', valueParam: 'C' }
+            ]
+        },
+        methods: {
+
+        }
+    })
+</script>

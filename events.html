@@ -1,0 +1,36 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<div id='example-1'>
+    <button v-on:click='addNumber(40)'>{{counter}}</button>
+    <button v-on:click='greet'>Greet</button>
+
+    <input type='submit' value='submit' v-on:click="warn('Form cannot be submitted yet.', $event)">
+    <a v-on:click.stop="greet">link</a>
+</div>
+<script>
+    var example1 = new Vue({
+        el: '#example-1',
+        data: {
+            counter: 25,
+            name: 'VUE.js'
+        },
+        methods: {
+            addNumber(number) {
+                this.counter += number;
+                return this.counter + number;
+            },
+            greet(event) {
+                alert('Hello' + this.name + '!');
+                if (event) {
+                    alert(event.target.tagName);
+                }
+            },
+            warn(message, event) {
+                if (event) {
+                    event.preventDefault();
+                    alert(message)
+                }
+            }
+        }
+    })
+</script>

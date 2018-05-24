@@ -1,0 +1,184 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+
+<ul class='example-1'>
+    <li v-for='(item, index) of items'>
+        {{item.message}} - {{ index }}
+    </li>
+</ul>
+<ul id="v-for-object" class="demo">
+    <li v-for="value in myObject">
+        {{ value }}
+    </li>
+    <div v-for="(value, key) in myObject">
+        {{ key }}: {{ value }}
+    </div>
+    <div v-for="(value, key, index) in myObject">
+      {{ index }}. {{ key }}: {{ value }}
+    </div>
+</ul>
+<ul id='example-3'>
+    <li v-for="n in addOne(evenNumbers)">{{ n }}</li>
+    <div>
+        <span v-for="n in 10">{{ n }} </span>
+    </div>
+</ul>
+
+<p>----------------------------------</p>
+<div class='e-4'>
+    <ul v-if="items.length">
+      <template v-for="item in items" v-if='item.id!==1'>
+        <li>{{ item.message }}</li>
+        <li class="divider">divider</li>
+      </template>
+    </ul>
+    <p v-else>No elements</p>
+</div>
+
+<div id="todo-list-example">
+        <input
+          v-model="newTodoText"
+          v-on:keyup.enter="addNewTodo"
+          placeholder="Add a todo"
+        >
+        <ul>
+          <li
+            is="todo-item"
+            v-for="(todo, index) in todos"
+            v-bind:key="todo.id"
+            v-bind:title="todo.title"
+            v-on:remove="todos.splice(index, 1)"
+          ></li>
+        </ul>
+      </div>
+<my-component v-for="item in items" :key="item.id"></my-component>
+
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script>
+    Vue.component('todo-item', {
+      template: `
+        <li>
+          {{ title }}
+          <button v-on:click="$emit('remove')">X</button>
+        </li>
+      `,
+      props: ['title']
+    })
+    new Vue({
+      el: '#todo-list-example',
+      data: {
+        newTodoText: '',
+        todos: [
+          {
+            id: 1,
+            title: 'Do the dishes',
+          },
+          {
+            id: 2,
+            title: 'Take out the trash',
+          },
+          {
+            id: 3,
+            title: 'Mow the lawn'
+          }
+        ],
+        nextTodoId: 4
+      },
+      methods: {
+        addNewTodo() {
+          this.todos.push({
+            id: this.nextTodoId++,
+            title: this.newTodoText
+          })
+          this.newTodoText = ''
+        }
+      }
+    })
+
+
+
+    let newComponent2 = new Vue({
+        el: '.e-4',
+        data: {
+            items: [{
+                id: 1,
+                message: 'first message11'
+            },{
+                id: 2,
+                message: 'second message11'
+            },{
+                id: 3,
+                message: 'third message'
+            },{
+                id: 4,
+                message: 'fourth message11'
+            }]
+        }
+    })
+    let newComponent = new Vue({
+        el: '.example-1',
+        data: {
+            items: [{
+                id: 1,
+                message: 'first message11'
+            },{
+                id: 2,
+                message: 'second message11'
+            },{
+                id: 3,
+                message: 'third message'
+            },{
+                id: 4,
+                message: 'fourth message11'
+            }]
+        }
+    })
+    new Vue({
+      el: '#v-for-object',
+      data: {
+        myObject: {
+          firstName: 'John',
+          lastName: 'Doe',
+          age: 30
+        }
+      }
+    })
+
+    newComponent.items = newComponent.items.filter(item => item.message.match(/message11/));
+    newComponent.items.push({id: 5, message: 'five message!!'})
+
+    var vm = new Vue({
+      data: {
+        items: ['a', 'b', 'c'],
+        userProfile: {
+            name: 'Anika'
+        }
+      }
+    })
+    Vue.set(vm.items, 1, 'd')
+    vm.$set(vm.items, 0, 'zz')
+    vm.items.splice(2) //newLength 2
+    vm.$set(vm.userProfile, 'age', 22)
+    vm.userProfile = Object.assign({}, vm.userProfile, {
+      age: 27,
+      favoriteColor: 'Vue Green'
+    })
+
+    new Vue({
+        el: '#example-3',
+        data: {
+            numbers: [1, 2, 3, 4, 5]
+        },
+        computed: {
+            evenNumbers() {
+                return this.numbers.filter(item => item%2 === 0)
+            }
+        },
+        methods: {
+            addOne(arr) {
+                return arr.map(item => item + 1)
+            }
+        }
+    })
+</script>

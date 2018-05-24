@@ -1,0 +1,348 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<div id="app">
+  <p>{{ message }}</p>
+</div>
+
+<div>
+  <div class='lol'>
+      <span v-bind:title="message2">
+          This is Spaaan
+      </span>
+    {{value1}}
+    {{value2}}
+  </div>
+</div>
+
+<div class='app-3'>
+    <span v-if='seen'>
+        now u see me
+    </span>
+</div>
+
+<div class="app-4">
+    <ul>
+        <li v-for='todo in todos'>
+            {{ todo.text }}
+        </li>
+    </ul>
+</div>
+
+<div id='app-5'>
+    <div>{{message}}</div>
+    <button v-on:click='reverseMessage'>reverse!</button>
+</div>
+
+<div id='app-6'>
+    <div>
+        {{ message }}
+    </div>
+    <input v-model='message'>
+</div>
+
+<div>
+    <div id='app-7'>
+        <ol>
+            <todo-item
+                v-for='item in groceryList'
+                v-bind:todo='item'
+                v-bind-key='item.id'
+            >
+            </todo-item>
+        </ol>
+    </div>
+</div>
+
+<div id='application'>
+    <app-nav></app-nav>
+    <app-view></app-view>
+    <span v-once>This will never change: {{ msg }}</span>
+    {{rawHtml}}
+    <p v-html='rawHtml'></p>
+    <div v-bind:id="dynamicId">dynamicId?</div>
+    <button v-bind:disabled="isButtonDisabled">Button</button>
+
+    {{ number + 1 }}
+
+    {{ ok ? 'YES' : 'NO' }}
+    <template v-if="ok">
+      <h1>Title</h1>
+      <p>Paragraph 1</p>
+      <p>Paragraph 2</p>
+    </template>
+    <div v-if="Math.random() > 0.5">
+      Now you see me
+    </div>
+    <div v-else>
+      Now you don't
+    </div>
+    <h1 v-if="ok">Yesss</h1>
+    <h2 v-else>NOO</h2>
+    <div v-bind:id="'list-' + id"></div>
+    <p v-if="seen">Now you see me</p>
+    <a v-bind:href="url"> GO TO GOOGLE </a>
+    <a :href="url"> ... </a>
+
+    <a v-on:click="doSomething"> CLICK! </a>
+    <a @click="doSomething"> CLICK! </a>
+    <form v-on:submit.prevent="onSubmit">
+        <input type="text" name="" id="">
+        <input type="submit" value="ok">
+    </form>
+    <div v-bind:class="{ active: isActive }">!!!Active</div>
+    <div class="static"
+        v-bind:class="{ active: isActive, 'text-danger': hasError }">
+        ???
+    </div>
+    <div v-bind:class="classObject">classObject</div>
+</div>
+<div id="example2">
+  <p>Original message: "{{ message }}"</p>
+  <p>Computed reversed message: "{{ reversedMessage }}"</p>
+  <p>new Reversed message: {{newReversed}}</p>
+  Reversed 2: {{reversedMessage2()}}
+  {{now}}
+  {{now2()}}
+</div>
+
+<div id="demo">{{ fullName }}</div>
+<div id="watch-example">
+  <p>
+    Ask a yes/no question:
+    <input v-model="question">
+  </p>
+  <p>{{ answer }}</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script>
+    var watchExampleVM = new Vue({
+  el: '#watch-example',
+  data: {
+    question: '',
+    answer: 'I cannot give you an answer until you ask a question!'
+  },
+  watch: {
+    // whenever question changes, this function will run
+    question: function (newQuestion, oldQuestion) {
+      this.answer = 'Waiting for you to stop typing...'
+      this.debouncedGetAnswer()
+    }
+  },
+  created: function () {
+    // _.debounce is a function provided by lodash to limit how
+    // often a particularly expensive operation can be run.
+    // In this case, we want to limit how often we access
+    // yesno.wtf/api, waiting until the user has completely
+    // finished typing before making the ajax request. To learn
+    // more about the _.debounce function (and its cousin
+    // _.throttle), visit: https://lodash.com/docs#debounce
+    this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+  },
+  methods: {
+    getAnswer:  function () {
+      if (this.question.indexOf('?') === -1) {
+        this.answer = 'Questions usually contain a question mark. ;-)'
+        return
+      }
+      this.answer = 'Thinking...'
+      var vm = this
+      axios.get('https://yesno.wtf/api')
+        .then(function (response) {
+          vm.answer = _.capitalize(response.data.answer)
+        })
+        .catch(function (error) {
+          vm.answer = 'Error! Could not reach the API. ' + error
+        })
+    }
+  }
+})
+
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue.js!',
+      }
+    })
+
+    console.log(app.message)
+
+    var lol = new Vue({
+    	el: '.lol',
+      data: {
+      	value1: '111',
+        value2: '222',
+        message2: 'superTitle'
+      }
+    })
+    lol.message2 = lol.message2 + 'ZZZ'
+
+    let App3 = new Vue({
+        el: '.app-3',
+        data: {
+            seen: true
+        }
+    });
+    setTimeout(() => {
+        App3.seen = false
+    }, 2000);
+    
+    let App4 = new Vue({
+        el: '.app-4',
+        data: {
+            todos: [{
+                id: 1,
+                text: 'Text1',
+            },{
+                id: 2,
+                text: 'Text2',
+            },{
+                id: 3,
+                text: 'Text3',
+            }]
+        }
+    });
+    App4.todos.push({id:5, text: 'TEXT5'});
+
+    let App5 = new Vue({
+        el: '#app-5',
+        data: {
+            message: 'Hello Vue Js!'
+        },
+        methods: {
+            reverseMessage() {
+                this.message = this.message.split('').reverse().join('')
+            }
+        }
+    });
+
+    let App6 = new Vue({
+        el: '#app-6',
+        data: {
+            message: 'input message!'
+        }
+    });
+
+    Vue.component('todo-item', {
+        props: ['todo'],
+        template: '<li>{{todo.text}}</li>'
+    });
+
+    let App7 = new Vue({
+        el: '#app-7',
+        data: {
+            groceryList: [
+                { id: 0, text: 'Vegetables' },
+                { id: 1, text: 'Cheese' },
+                { id: 2, text: 'Whatever else humans are supposed to eat' }
+            ]
+        }
+    })
+
+
+    Vue.component('app-nav', {
+        template: '<p>Navbar</p>'
+    })
+    Vue.component('app-view', {
+        template: `<div>
+            <app-sidebar></app-sidebar>
+            <app-content></app-content>
+        </div>`
+    })
+    Vue.component('app-sidebar', {
+        template: '<p>my sidebar my sidebar my sidebar my sidebar</p>'
+    })
+    Vue.component('app-content', {
+        template: '<p>my contant my contant my contant my contant</p>'
+    })
+          
+    var Applicat = new Vue({
+        el: '#application',
+        data: {
+            msg: 'MSG!',
+            rawHtml: '<span style="color:red">red</span>',
+            isButtonDisabled: true,
+            dynamicId: 25,
+            number: 99,
+            ok: true,
+            id: 44,
+            seen: true,
+            url: 'https://www.google.com',
+            isActive: true,
+            hasError: false,
+            classObject: {
+                active: true,
+                'text-danger': false,
+                'good-font': true
+            }
+        },
+        methods: {
+            doSomething() {
+                alert('gogo')
+            },
+            onSubmit() {
+                alert('prev def')
+            },
+        }
+    });
+
+    let data = {a: 1};
+    let vm = new Vue({
+        el: '#example',
+        data: data,
+        created() {
+            console.log('A is : ', this.a);
+        }
+    })
+
+    var vmm = new Vue({
+      el: '#example2',
+      data: {
+        message: 'Hello',
+      },
+      computed: {
+        // a computed getter
+        reversedMessage: function () {
+          // `this` points to the vm instance
+          return this.message.split('').reverse().join('')
+        },
+        newReversed() {
+            return this.message + 1;
+        },
+        now() {
+            return Date.now()
+        }
+      },
+      methods: {
+        reversedMessage2() {
+          // `this` points to the vm instance
+          return this.message.split('').reverse().join('')
+        },
+        now2() {
+            return Date.now()
+        }
+      }
+    })
+
+    var v1 = new Vue({
+      el: '#demo',
+      data: {
+        firstName: 'Foo',
+        lastName: 'Bar',
+        fullName: 'Foo Bar'
+      },
+      watch: {
+        firstName: function (val) {
+          this.fullName = val + ' ' + this.lastName
+        },
+        lastName: function (val) {
+          this.fullName = this.firstName + ' ' + val
+        }
+      }
+    })
+
+</script>
+
+    

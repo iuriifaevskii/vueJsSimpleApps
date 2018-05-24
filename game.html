@@ -1,0 +1,157 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<style>
+    .flex-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+    .hero {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+    }
+    .hp-container {
+        height: 50px;
+        width: 100%;
+        color: white;
+        background: rgb(170, 170, 170);
+    }
+    .hp {
+        background: green;
+        width: 100%;
+        height: 50px;
+    }
+    .log-blue {
+        color: rgb(0, 0, 121);
+        background: rgb(132, 0, 255)
+    } 
+    .log-common {
+        margin: 5px;
+        padding: 5px;
+        font-size: 15px;
+    }
+    .log-red {
+        color: rgb(85, 0, 0);
+        background: rgb(245, 98, 147);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div class="container" id='app'>
+    <div class="flex-container">
+        <div class="hero">
+            {{myTitle}}
+            <div class="hp-container">
+                <div class="hp" :style="{width: myHp + '%'}">
+                    {{myHp}}
+                </div>
+            </div>
+        </div>
+        <div class="hero">
+            {{enemyTitle}}
+            <div class="hp-container">
+                <div class="hp" :style="{width: enemyHp + '%'}">
+                    {{enemyHp}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-dark text-center">
+        <template v-if="!isStartGame">
+            <button @click="startNewGame()" class="btn btn-success">Start New Game</button>
+        </template>
+        <template v-else>
+            <button @click="attack()" class="btn btn-danger">ATTACK</button>
+            <button @click="specialAttack()" class="btn btn-warning">SPECIAL ATTACK</button>
+            <button @click="heal()" class="btn btn-success">HEAL</button>
+            <button @click="isStartGame = !isStartGame" class="btn btn-secondary">GIVE UP</button>
+        </template>
+    </div>
+    <div class="alert alert-dark text-center" v-if='logs.length > 0'>
+        <div v-for='log in logs' class="log-common" :class="[log.hero === 'MONSTER'? 'log-red' : 'log-blue']">
+            {{log.hero}} {{log.message}} {{log.hp}}
+        </div>
+    </div>
+</div>
+
+<script>
+    const myHero = new Vue({
+        data: {
+            myTitle: 'You',
+            myHp: 100,
+            myDamage: 0,
+
+            enemyTitle: 'Enemy',
+            enemyHp: 100,
+            monsterDamage: 0,
+
+            isStartGame: false,
+            logs: []
+        },
+        computed: {
+            
+        },
+        watch: {
+            myHp(newHp, oldHp) {
+                if (newHp <= 0) {
+                    this._makeChoise('You lost! Try again');
+                } else if (this.enemyHp <= 0) {
+                    this._makeChoise('You win!');
+                }
+            }
+        },
+        methods: {
+            startNewGame() {
+                this.isStartGame = !this.isStartGame;
+                this._clearData();
+            },
+            attack(double = 1) {
+                const mosterDamage = this._randomDamage();
+                const myDamage = this._randomDamage() * double;
+                this.myHp -= mosterDamage;
+                this.enemyHp -= myDamage;
+                
+                this._addLog('MONSTER', 'hits player for', mosterDamage);
+                this._addLog('PLAYER', 'hits monster for', myDamage);
+                return false;
+            },
+            specialAttack() {
+                return this.attack(2);
+            },
+            heal() {
+                const mosterDamage = this._randomDamage();
+                const healsHp = 5; 
+                this.myHp -= mosterDamage;
+                setTimeout(() => this.myHp += healsHp, 1000);
+                
+                this._addLog('MONSTER', 'hits player for', mosterDamage);
+                this._addLog('PLAYER', 'heals himself for', healsHp);
+                return false;
+            },
+            _randomDamage() {
+                return Math.floor(Math.random() * 11);
+            },
+            _makeChoise(message) {
+                var r = confirm(message);
+                if (r) {
+                    this.startNewGame();
+                }
+                this.isStartGame = !this.isStartGame;
+            },
+            _clearData() {
+                this.myHp = this.enemyHp = 100;
+                this.logs = [];
+            },
+            _addLog(hero, message, hp) {
+                this.logs.push({
+                    hero, 
+                    message,
+                    hp
+                });
+            }
+        }
+    });
+
+    myHero.$mount('#app');
+
+</script>
