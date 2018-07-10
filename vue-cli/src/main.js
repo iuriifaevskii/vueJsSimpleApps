@@ -22,6 +22,13 @@ Vue.directive('highlight', {
   }
 })
 
+
+// https://vuejs.org/v2/examples/modal.html
+import {ApproveDirective} from './directives';
+Vue.directive('approve', ApproveDirective);
+
+
+
 Vue.component('app-servers', Home);
 
 new Vue({

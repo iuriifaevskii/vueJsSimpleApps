@@ -8,12 +8,26 @@
     
     <!-- <div v-highlight="'red'">Test</div> -->
     <!-- <div v-highlight:background="'red'">Test</div> -->
-    <div v-highlight:background.delayed="'red'">Test</div>
+    
+    <!-- <div v-highlight:background.delayed="'red'">Test</div>
     <div v-local-highlight:background.delayed.blink="{
       mainColor: 'red',
       secondColor: 'green',
       delay: 500
-    }">Test</div>
+    }">Test</div> -->
+
+
+
+    <div style="background:green;color:white"
+      v-approve="{ callback: testClickEvent, styleConfirm: 'green' }">
+      element
+    </div>
+
+    <div style="background:green;color:white"
+      v-approve="testClickEvent">
+      element
+    </div>
+
   </div>
 </template>
 
@@ -29,6 +43,14 @@
       // 'app-server': Server,
       // 'app-server-details': ServerDetails,
       // 'app-footer': Footer,
+    },
+    methods: {
+      realEvent(a, b) {
+        alert('sum: ' + (+a + +b))
+      },
+      testClickEvent() {
+        this.realEvent(15, 17);
+      }
     },
     directives: {
       'local-highlight': {
